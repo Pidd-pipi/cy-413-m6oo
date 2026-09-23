@@ -6,3 +6,4 @@ paths:
   /v1/moods: {get: {summary: List moods}, post: {summary: Create mood}}
   /v1/assessments: {get: {summary: List assessments}}
   /v1/journals: {get: {summary: List journals}, post: {summary: Create journal}}
+  /v1/users/weekly-recap: {get: {summary: Weekly recap of the current user, Beijing time from Monday to today}}

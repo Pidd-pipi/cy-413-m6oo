@@ -13,5 +13,6 @@ func RegisterUsers(g *gin.RouterGroup, h *handler.UserHandler, auth gin.HandlerF
 	p.GET("/me", h.Me)
 	p.PUT("/me", h.Update)
 	p.GET("/reports", h.Report)
+	p.GET("/weekly-recap", h.WeeklyRecap)
 	_ = middleware.UserID
 }

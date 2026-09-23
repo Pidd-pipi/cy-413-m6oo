@@ -7,6 +7,7 @@ const (
 	LogAuthLogin          = "User login requested"
 	LogUserProfileRead    = "User profile read"
 	LogUserProfileUpdated = "User profile updated"
+	LogWeeklyRecapRead    = "Weekly recap requested"
 	LogMoodCreated        = "Mood created with mood_level and mood_tags"
 	LogMoodListed         = "Mood list requested"
 	LogMoodUpdated        = "Mood updated"

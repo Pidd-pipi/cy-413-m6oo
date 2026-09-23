@@ -4,4 +4,5 @@ export interface Mood {id:number;user_id:number;mood_level:number;mood_tags:stri
 export interface Assessment {id:number;title:string;description:string;category:AssessmentCategory;questions:string;scoring_rule:string}
 export interface Journal {id:number;title:string;content:string;mood_level:number;weather:string;is_private:boolean;created_at:string;updated_at:string}
 export interface UserAssessment {id:number;assessment_id:number;score:number;result:string;suggestion:string;created_at:string}
+export interface WeeklyRecap {start_date:string;end_date:string;mood_count:number;average_mood:number|null;top_tag:string;journal_count:number;assessment_done:number;moods_to_three:number}
 export interface ApiResponse<T>{code:number;message:string;data:T}

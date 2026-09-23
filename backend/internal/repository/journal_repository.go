@@ -4,11 +4,13 @@ import (
 	"errors"
 	"github.com/blueship581/mindgarden/backend/internal/model"
 	"gorm.io/gorm"
+	"time"
 )
 
 type JournalRepository interface {
 	Create(*model.Journal) error
 	List(uint, int) ([]model.Journal, error)
+	CountRange(uint, time.Time, time.Time) (int64, error)
 	ByID(uint, uint) (*model.Journal, error)
 	Update(*model.Journal) error
 	Delete(*model.Journal) error
@@ -23,6 +25,11 @@ func (r *journalRepository) List(uid uint, level int) (out []model.Journal, e er
 		q = q.Where("mood_level = ?", level)
 	}
 	e = q.Order("created_at desc").Find(&out).Error
+	return
+}
+func (r *journalRepository) CountRange(uid uint, from, to time.Time) (n int64, e error) {
+	e = r.db.Model(&model.Journal{}).
+		Where("user_id = ? AND created_at >= ? AND created_at < ?", uid, from, to).Count(&n).Error
 	return
 }
 func (r *journalRepository) ByID(id, uid uint) (*model.Journal, error) {

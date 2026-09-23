@@ -13,12 +13,13 @@ import (
 type UserHandler struct {
 	users          *service.UserService
 	assessments    *service.AssessmentService
+	recaps         *service.RecapService
 	logger         *slog.Logger
 	secret, issuer string
 }
 
-func NewUserHandler(u *service.UserService, a *service.AssessmentService, l *slog.Logger, secret, issuer string) *UserHandler {
-	return &UserHandler{u, a, l, secret, issuer}
+func NewUserHandler(u *service.UserService, a *service.AssessmentService, r *service.RecapService, l *slog.Logger, secret, issuer string) *UserHandler {
+	return &UserHandler{u, a, r, l, secret, issuer}
 }
 func (h *UserHandler) Register(c *gin.Context) {
 	var r dto.RegisterRequest
@@ -79,6 +80,14 @@ func (h *UserHandler) Update(c *gin.Context) {
 }
 func (h *UserHandler) Report(c *gin.Context) {
 	v, e := h.assessments.Report(middleware.UserID(c))
+	if e != nil {
+		c.Error(e)
+		return
+	}
+	ok(c, v)
+}
+func (h *UserHandler) WeeklyRecap(c *gin.Context) {
+	v, e := h.recaps.Weekly(middleware.UserID(c))
 	if e != nil {
 		c.Error(e)
 		return

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/blueship581/mindgarden/backend/internal/model"
 	"gorm.io/gorm"
+	"time"
 )
 
 type AssessmentRepository interface {
@@ -12,6 +13,7 @@ type AssessmentRepository interface {
 	Create(*model.Assessment) error
 	CreateUserAssessment(*model.UserAssessment) error
 	Report(uint) ([]model.UserAssessment, error)
+	CountRange(uint, time.Time, time.Time) (int64, error)
 	Count() (int64, error)
 }
 type assessmentRepository struct{ db *gorm.DB }
@@ -35,6 +37,11 @@ func (r *assessmentRepository) CreateUserAssessment(v *model.UserAssessment) err
 }
 func (r *assessmentRepository) Report(uid uint) (out []model.UserAssessment, e error) {
 	e = r.db.Where("user_id = ?", uid).Order("created_at desc").Find(&out).Error
+	return
+}
+func (r *assessmentRepository) CountRange(uid uint, from, to time.Time) (n int64, e error) {
+	e = r.db.Model(&model.UserAssessment{}).
+		Where("user_id = ? AND created_at >= ? AND created_at < ?", uid, from, to).Count(&n).Error
 	return
 }
 func (r *assessmentRepository) Count() (int64, error) {

@@ -41,11 +41,12 @@ func main() {
 	ms := service.NewMoodService(mr, logger)
 	as := service.NewAssessmentService(ar, logger)
 	js := service.NewJournalService(jr, logger)
+	rs := service.NewRecapService(mr, jr, ar, logger)
 	if e = as.Seed(); e != nil {
 		logger.Error("assessment seed failed", "error", e)
 		os.Exit(1)
 	}
-	h := router.Handlers{User: handler.NewUserHandler(us, as, logger, cfg.JWTSecret, cfg.JWTIssuer), Mood: handler.NewMoodHandler(ms, logger), Assessment: handler.NewAssessmentHandler(as, logger), Journal: handler.NewJournalHandler(js, logger)}
+	h := router.Handlers{User: handler.NewUserHandler(us, as, rs, logger, cfg.JWTSecret, cfg.JWTIssuer), Mood: handler.NewMoodHandler(ms, logger), Assessment: handler.NewAssessmentHandler(as, logger), Journal: handler.NewJournalHandler(js, logger)}
 	if e = router.New(cfg, h, logger).Run(":" + cfg.Port); e != nil {
 		logger.Error("server stopped", "error", e)
 		os.Exit(1)

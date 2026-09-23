@@ -3,6 +3,25 @@ info: {title: MindGarden API, version: 1.0.0}
 paths:
   /v1/auth/register: {post: {summary: Register}}
   /v1/auth/login: {post: {summary: Login}}
+  /v1/users/weekly-recap:
+    get:
+      summary: Weekly recap (Beijing time, Monday through today)
+      responses:
+        '200':
+          description: Weekly recap for the current user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  start_date: {type: string, example: '2026-09-21'}
+                  end_date: {type: string, example: '2026-09-23'}
+                  mood_count: {type: integer, example: 2}
+                  average_mood: {type: number, nullable: true, example: 6.5}
+                  top_tag: {type: string, nullable: true, example: calm}
+                  journal_count: {type: integer, example: 1}
+                  assessment_done: {type: integer, example: 1}
+                  moods_to_three: {type: integer, example: 1}
   /v1/moods: {get: {summary: List moods}, post: {summary: Create mood}}
   /v1/assessments: {get: {summary: List assessments}}
   /v1/journals: {get: {summary: List journals}, post: {summary: Create journal}}

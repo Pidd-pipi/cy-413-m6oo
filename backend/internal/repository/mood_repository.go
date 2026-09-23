@@ -10,6 +10,7 @@ import (
 type MoodRepository interface {
 	Create(*model.Mood) error
 	List(uint, *time.Time) ([]model.Mood, error)
+	Range(uint, time.Time, time.Time) ([]model.Mood, error)
 	ByID(uint, uint) (*model.Mood, error)
 	Update(*model.Mood) error
 	Delete(*model.Mood) error
@@ -24,6 +25,11 @@ func (r *moodRepository) List(uid uint, date *time.Time) (out []model.Mood, e er
 		q = q.Where("record_date >= ? AND record_date < ?", date.Truncate(24*time.Hour), date.Truncate(24*time.Hour).AddDate(0, 0, 1))
 	}
 	e = q.Order("record_date desc, id desc").Find(&out).Error
+	return
+}
+func (r *moodRepository) Range(uid uint, from, to time.Time) (out []model.Mood, e error) {
+	e = r.db.Where("user_id = ? AND record_date >= ? AND record_date < ?", uid, from, to).
+		Order("record_date desc, id desc").Find(&out).Error
 	return
 }
 func (r *moodRepository) ByID(id, uid uint) (*model.Mood, error) {
